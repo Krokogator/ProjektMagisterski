@@ -9,11 +9,15 @@ public class TabPaneManger {
 
     private final ConsoleTabController consoleTabController;
     private final LoggerTabController loggerTabController;
+    private final GraphTabController graphTabController;
+    private final NeuronTabController neuronTabController;
 
     @Autowired
-    public TabPaneManger(ConsoleTabController consoleTabController, LoggerTabController loggerTabController) {
+    public TabPaneManger(ConsoleTabController consoleTabController, LoggerTabController loggerTabController, GraphTabController graphTabController, NeuronTabController neuronTabController) {
         this.consoleTabController = consoleTabController;
         this.loggerTabController = loggerTabController;
+        this.graphTabController = graphTabController;
+        this.neuronTabController = neuronTabController;
     }
 
     public TextArea getVisualLog() {

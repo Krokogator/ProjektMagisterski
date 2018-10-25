@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.VBox?>
+<Tab fx:id="neuronTab" text="Neural network" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mvp.java.controllers.NeuronTabController">
+    <VBox alignment="TOP_CENTER" spacing="10">
+        <children>
+            <Canvas fx:id="neuronCanvas" height="800.0" width="1920.0" />
+
+
+        </children>
+    </VBox>
+</Tab>
