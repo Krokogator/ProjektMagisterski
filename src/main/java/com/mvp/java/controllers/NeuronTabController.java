@@ -1,5 +1,6 @@
 package com.mvp.java.controllers;
 
+import com.mvp.java.neuralnetwork.Neuron;
 import com.mvp.java.services.TwoOptService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -118,5 +120,9 @@ public class NeuronTabController {
         gc.fillRect(0,0,neuronCanvas.getWidth(), neuronCanvas.getHeight());
     }
 
+    public void test(MouseEvent mouseEvent) {
+        Neuron n = new Neuron(5);
+        System.out.println(n.toString());
+    }
 }
 
