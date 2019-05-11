@@ -20,7 +20,7 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 @Component
-public class GraphTabController {
+public class SalesmanTabController {
 
     @Autowired
     TwoOptService twoOptService;

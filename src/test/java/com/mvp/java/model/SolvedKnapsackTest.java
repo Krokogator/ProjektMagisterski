@@ -1,5 +1,7 @@
 package com.mvp.java.model;
 
+import com.mvp.java.model.knapsack.Item;
+import com.mvp.java.model.knapsack.SolvedKnapsack;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

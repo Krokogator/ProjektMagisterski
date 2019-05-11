@@ -1,6 +1,6 @@
 package com.mvp.java.services;
 
-import com.mvp.java.strategy.IKnapsackStrategy;
+import com.mvp.java.strategy.knapsack.IKnapsackStrategy;
 import org.springframework.stereotype.Service;
 
 @Service

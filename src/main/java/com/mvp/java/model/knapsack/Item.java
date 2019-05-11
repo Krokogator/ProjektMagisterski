@@ -1,4 +1,4 @@
-package com.mvp.java.model;
+package com.mvp.java.model.knapsack;
 
 public class Item {
     private int size;

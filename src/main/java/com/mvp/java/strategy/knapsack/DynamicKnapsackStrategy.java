@@ -1,4 +1,4 @@
-package com.mvp.java.strategy;
+package com.mvp.java.strategy.knapsack;
 
 public class DynamicKnapsackStrategy  {
 

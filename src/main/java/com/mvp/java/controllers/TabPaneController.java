@@ -1,0 +1,15 @@
+package com.mvp.java.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class TabPaneController {
+
+    private final SalesmanTabController salesmanTabController;
+
+    @Autowired
+    public TabPaneController(SalesmanTabController salesmanTabController) {
+        this.salesmanTabController = salesmanTabController;
+    }
+}
