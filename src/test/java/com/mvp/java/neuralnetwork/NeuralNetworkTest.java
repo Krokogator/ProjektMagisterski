@@ -1,6 +1,6 @@
 package com.mvp.java.neuralnetwork;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NeuralNetworkTest {
 

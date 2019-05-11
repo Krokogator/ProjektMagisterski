@@ -3,6 +3,7 @@ plugins {
     id 'java'
 }
 
+apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.mvp.java'
@@ -16,6 +17,23 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs 'main'
+        }
+    }
+    test {
+        java {
+            srcDirs 'test'
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'com.mvp.java.Main'
@@ -27,7 +45,6 @@ repositories {
 }
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+    
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter', version:'5.4.0'
 }
