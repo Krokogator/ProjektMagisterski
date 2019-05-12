@@ -44,12 +44,10 @@ public class Route {
     @Override
     public Route clone() {
         Route route = null;
-        try {
-            route = (Route) super.clone();
-            route.cities = new ArrayList<>(cities);
-        } catch (CloneNotSupportedException e) {
-            System.out.println("Clone not supported");
-        }
+
+        route = new Route();
+        route.cities = new ArrayList<>(cities);
+
         return route;
     }
 }

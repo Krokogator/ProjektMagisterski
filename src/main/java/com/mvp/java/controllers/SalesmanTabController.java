@@ -1,8 +1,10 @@
 package com.mvp.java.controllers;
 
 import com.mvp.java.model.salesman.City;
+import com.mvp.java.model.salesman.Route;
 import com.mvp.java.services.SalesmanService;
 import com.mvp.java.services.TwoOptService;
+import com.mvp.java.strategy.salesman.SimulatedAnnealingStrategy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -17,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -39,6 +38,7 @@ public class SalesmanTabController {
     @FXML public ColorPicker roadColorPicker;
     private GraphicsContext gc;
     private List<Point2D> points;
+    private Route route;
 
     private int cityCount = 70;
     private double citySize = 4.5;
@@ -58,6 +58,8 @@ public class SalesmanTabController {
         clear();
 //        generatePoints();
         try {
+            salesmanService.init();
+            this.route = salesmanService.getRoute();
             loadPoints();
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,8 +68,7 @@ public class SalesmanTabController {
     }
 
     private void loadPoints() throws IOException {
-        salesmanService.init();
-        List<City> cities = salesmanService.getRoute().getCities();
+        List<City> cities = this.route.getCities();
         List<Point2D> points = cities.stream()
                 .map(city -> new Point2D(city.getX(), city.getY()))
                 .collect(Collectors.toList());
@@ -77,6 +78,8 @@ public class SalesmanTabController {
                 return new Point2D((point.getY()+130) * (graphCanvas.getWidth()/65f), ((point.getX()*-1+50)) * (graphCanvas.getHeight()/27f));
             })
             .collect(Collectors.toList());
+
+        Collections.shuffle(this.points);
 
         this.points.forEach(x-> System.out.println(x.getX() + " : " + x.getY()));
     }
@@ -203,6 +206,18 @@ public class SalesmanTabController {
     public void setColors(ActionEvent actionEvent) {
         this.cityColor = cityColorPicker.getValue();
         this.roadColor = roadColorPicker.getValue();
+        clear();
+        draw();
+    }
+
+    public void simulatedAnnealing(MouseEvent mouseEvent) {
+        SimulatedAnnealingStrategy strategy = new SimulatedAnnealingStrategy(0.99998, 0.1, 100);
+        this.route = strategy.solve(route);
+        try {
+            loadPoints();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         clear();
         draw();
     }

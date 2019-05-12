@@ -21,6 +21,7 @@
                             <TextField fx:id="cityCountInput" maxWidth="100" />
                             <Button mnemonicParsing="false" onMouseClicked="#orderClosest" text="Closest path" GridPane.rowIndex="1" />
                             <Button mnemonicParsing="false" onMouseClicked="#orderTwoOpt" text="2 Opt swap" GridPane.rowIndex="1" />
+                            <Button mnemonicParsing="false" onMouseClicked="#simulatedAnnealing" text="Simulated Annealing" GridPane.rowIndex="1" />
                         </children>
                     </VBox>
                     <VBox>

@@ -1,7 +1,13 @@
 package com.mvp.java.strategy.salesman;
 
+import com.mvp.java.model.salesman.City;
 import com.mvp.java.model.salesman.Route;
 import com.mvp.java.strategy.ISalesmanStrategy;
+
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class SimulatedAnnealingStrategy implements ISalesmanStrategy {
 
@@ -14,11 +20,18 @@ public class SimulatedAnnealingStrategy implements ISalesmanStrategy {
     private Route current;
     private Route candidate;
 
+    private Random random;
+
+    public SimulatedAnnealingStrategy(){
+        this.random = new Random();
+    }
+
     public SimulatedAnnealingStrategy(
             double alpha,
             double epsilon,
             double temp
     ) {
+        this();
         this.alpha = alpha;
         this.epsilon = epsilon;
         this.tempStart = temp;
@@ -32,19 +45,71 @@ public class SimulatedAnnealingStrategy implements ISalesmanStrategy {
 
         while (tempCurrent > epsilon) {
             iterate();
+            System.out.println(current.getLength());
+
         }
 
         return best;
     }
 
     private void iterate(){
-        createNewCandidate(8, 20);
+        int k = random.nextInt(current.getCities().size());
+        while (k <= 0) {
+            k = random.nextInt(current.getCities().size());
+        }
+        int i = random.nextInt(k);
+        createNewCandidate(i, k);
+
+        if(isBest()) {
+            this.best = candidate.clone();
+            this.current = candidate.clone();
+        } else if (isAccepted()) {
+            this.current = candidate.clone();
+        }
+
+        decreaseTemp();
     }
 
     private void createNewCandidate(int i, int k) {
-        candidate = new Route();
-        for (int j = 0; j < i; k++) {
-
+        List<City> cities = new ArrayList<>();
+        for (int j = 0; j < i; j++) {
+            cities.add(current.getCities().get(j));
         }
+        for (int j = k; j >= i; j--) {
+            cities.add(current.getCities().get(j));
+        }
+        if(current.getCities().size() > k+1)
+        for (int j = k+1; j < current.getCities().size(); j++) {
+            cities.add(current.getCities().get(j));
+        }
+
+        this.candidate = new Route(cities);
+    }
+
+    private boolean isBest() {
+        if (candidate.getLength() > best.getLength()) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isAccepted() {
+        double candidateLength = candidate.getLength();
+        double currentLength = current.getLength();
+        if (candidateLength < currentLength) {
+            return true;
+        } else if ( random.nextDouble() < Math.exp((currentLength - candidateLength) / tempCurrent) ) {
+            System.out.println("CHANCE: " + tempCurrent);
+            return true;
+        }
+        return false;
+    }
+
+    private void setNewCurrent(){
+        this.current = candidate.clone();
+    }
+
+    private void decreaseTemp(){
+        this.tempCurrent *= alpha;
     }
 }
