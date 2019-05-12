@@ -1,15 +1,26 @@
 package com.mvp.java.model.salesman;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class Route {
 
-    private List<City> cities;
+    private List<City> cities = new ArrayList<>();
 
     public Route(List<City> cities) {
+        this.cities = cities;
+    }
+
+    public List<City> getCities() {
+        return cities;
+    }
+
+    public void setCities(List<City> cities) {
         this.cities = cities;
     }
 
@@ -28,5 +39,17 @@ public class Route {
         }
 
         return length;
+    }
+
+    @Override
+    public Route clone() {
+        Route route = null;
+        try {
+            route = (Route) super.clone();
+            route.cities = new ArrayList<>(cities);
+        } catch (CloneNotSupportedException e) {
+            System.out.println("Clone not supported");
+        }
+        return route;
     }
 }
