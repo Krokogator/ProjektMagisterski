@@ -13,7 +13,7 @@ public class Route {
     private List<City> cities = new ArrayList<>();
 
     public Route(List<City> cities) {
-        this.cities = cities;
+        this.cities = new ArrayList<>(cities);
     }
 
     public List<City> getCities() {
@@ -43,11 +43,6 @@ public class Route {
 
     @Override
     public Route clone() {
-        Route route = null;
-
-        route = new Route();
-        route.cities = new ArrayList<>(cities);
-
-        return route;
+        return new Route(cities);
     }
 }

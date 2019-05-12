@@ -1,5 +1,7 @@
 package com.mvp.java.services;
 
+import com.mvp.java.model.salesman.City;
+import com.mvp.java.model.salesman.Route;
 import javafx.geometry.Point2D;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -14,18 +16,19 @@ import static java.util.stream.Collectors.toList;
 public class TwoOptService {
 
     @Async
-    public CompletableFuture<List<Point2D>> optimise(List<Point2D> cities){
-        CompletableFuture<List<Point2D>> future = new CompletableFuture<>();
+    public CompletableFuture<Route> optimise(Route route){
+        CompletableFuture<Route> future = new CompletableFuture<>();
 
-        Point[] points = cities.stream().map(x -> new Point(x.getX(), x.getY())).toArray(Point[]::new);
+        Point[] points = route.getCities().stream().map(x -> new Point(x.getX(), x.getY())).toArray(Point[]::new);
         optimise(points);
 
-        cities = new ArrayList<>();
+        List<City> cities = new ArrayList<>();
         for(Point p : points){
-            cities.add(new Point2D(p.getX(), p.getY()));
+            cities.add(new City(p.getX(), p.getY()));
         }
 
-        future.complete(cities);
+
+        future.complete(new Route(cities));
 
         return future;
     }

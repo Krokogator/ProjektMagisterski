@@ -4,6 +4,7 @@ import com.mvp.java.model.salesman.City;
 import com.mvp.java.model.salesman.Route;
 import com.mvp.java.services.SalesmanService;
 import com.mvp.java.services.TwoOptService;
+import com.mvp.java.strategy.salesman.GeneticStrategy;
 import com.mvp.java.strategy.salesman.SimulatedAnnealingStrategy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,6 +61,7 @@ public class SalesmanTabController {
         try {
             salesmanService.init();
             this.route = salesmanService.getRoute();
+            Collections.shuffle(this.route.getCities());
             loadPoints();
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,10 +80,6 @@ public class SalesmanTabController {
                 return new Point2D((point.getY()+130) * (graphCanvas.getWidth()/65f), ((point.getX()*-1+50)) * (graphCanvas.getHeight()/27f));
             })
             .collect(Collectors.toList());
-
-        Collections.shuffle(this.points);
-
-        this.points.forEach(x-> System.out.println(x.getX() + " : " + x.getY()));
     }
 
 
@@ -98,8 +96,6 @@ public class SalesmanTabController {
                     )
             );
         }
-
-        points.forEach(x-> System.out.println(x.getX() + ", "+x.getY()));
     }
 
     private void orderize(){
@@ -121,8 +117,19 @@ public class SalesmanTabController {
     }
 
     private void twoOpt(){
-        CompletableFuture<List<Point2D>> futureCities = twoOptService.optimise(points);
-        futureCities.whenCompleteAsync((point2DS, throwable) -> {points = point2DS; clear(); draw();});
+        CompletableFuture<Route> futureCities = twoOptService.optimise(this.route);
+        futureCities.whenCompleteAsync((route, throwable) -> {
+            this.route = route;
+            clear();
+            try {
+                loadPoints();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            draw();
+        });
+
+        System.out.println(route.getLength());
     }
 
     private Comparator<Point2D> getNearest (Point2D firstPoint){
@@ -211,7 +218,7 @@ public class SalesmanTabController {
     }
 
     public void simulatedAnnealing(MouseEvent mouseEvent) {
-        SimulatedAnnealingStrategy strategy = new SimulatedAnnealingStrategy(0.99998, 0.1, 100);
+        SimulatedAnnealingStrategy strategy = new SimulatedAnnealingStrategy(0.9999, 1, 10);
         this.route = strategy.solve(route);
         try {
             loadPoints();
@@ -220,5 +227,10 @@ public class SalesmanTabController {
         }
         clear();
         draw();
+    }
+
+    public void genetic(MouseEvent mouseEvent) {
+        GeneticStrategy geneticStrategy = new GeneticStrategy(100, 50);
+        geneticStrategy.solve(route);
     }
 }

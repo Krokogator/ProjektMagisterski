@@ -6,6 +6,7 @@ import com.mvp.java.strategy.ISalesmanStrategy;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -45,8 +46,6 @@ public class SimulatedAnnealingStrategy implements ISalesmanStrategy {
 
         while (tempCurrent > epsilon) {
             iterate();
-            System.out.println(current.getLength());
-
         }
 
         return best;
@@ -60,14 +59,32 @@ public class SimulatedAnnealingStrategy implements ISalesmanStrategy {
         int i = random.nextInt(k);
         createNewCandidate(i, k);
 
+//        swapRandomTwo();
+
         if(isBest()) {
             this.best = candidate.clone();
             this.current = candidate.clone();
+            System.out.println(current.getLength());
+
         } else if (isAccepted()) {
             this.current = candidate.clone();
+            System.out.println(current.getLength());
+
         }
 
         decreaseTemp();
+    }
+
+    private void swapRandomTwo(){
+        int size = current.getCities().size();
+        int r = random.nextInt(size-2);
+        List<City> cities = current.getCities();
+
+        City temp = cities.get(r);
+        cities.set(r, cities.get(r+1));
+        cities.set(r+1, temp);
+
+        this.candidate = new Route(cities);
     }
 
     private void createNewCandidate(int i, int k) {
@@ -103,10 +120,6 @@ public class SimulatedAnnealingStrategy implements ISalesmanStrategy {
             return true;
         }
         return false;
-    }
-
-    private void setNewCurrent(){
-        this.current = candidate.clone();
     }
 
     private void decreaseTemp(){
