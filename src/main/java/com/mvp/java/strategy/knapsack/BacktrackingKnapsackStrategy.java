@@ -1,5 +1,7 @@
 package com.mvp.java.strategy.knapsack;
 
+import com.mvp.java.strategy.IKnapsackStrategy;
+
 public class BacktrackingKnapsackStrategy implements IKnapsackStrategy {
 
     int[] p;

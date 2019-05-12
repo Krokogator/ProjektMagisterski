@@ -1,5 +1,7 @@
 package com.mvp.java.controllers;
 
+import com.mvp.java.model.salesman.City;
+import com.mvp.java.services.SalesmanService;
 import com.mvp.java.services.TwoOptService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,17 +12,23 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import org.apache.sis.distance.DistanceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Component
 public class SalesmanTabController {
+
+    @Autowired
+    SalesmanService salesmanService;
 
     @Autowired
     TwoOptService twoOptService;
@@ -48,8 +56,29 @@ public class SalesmanTabController {
         this.roadColorPicker.setValue(roadColor);
         this.cityCountInput.setText(String.valueOf(cityCount));
         clear();
-        generatePoints();
+//        generatePoints();
+        try {
+            loadPoints();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         draw();
+    }
+
+    private void loadPoints() throws IOException {
+        salesmanService.init();
+        List<City> cities = salesmanService.getRoute().getCities();
+        List<Point2D> points = cities.stream()
+                .map(city -> new Point2D(city.getX(), city.getY()))
+                .collect(Collectors.toList());
+
+        this.points = points.stream()
+            .map(point -> {
+                return new Point2D((point.getY()+130) * (graphCanvas.getWidth()/65f), ((point.getX()*-1+50)) * (graphCanvas.getHeight()/27f));
+            })
+            .collect(Collectors.toList());
+
+        this.points.forEach(x-> System.out.println(x.getX() + " : " + x.getY()));
     }
 
 
@@ -66,6 +95,8 @@ public class SalesmanTabController {
                     )
             );
         }
+
+        points.forEach(x-> System.out.println(x.getX() + ", "+x.getY()));
     }
 
     private void orderize(){
