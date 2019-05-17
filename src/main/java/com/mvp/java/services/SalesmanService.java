@@ -27,6 +27,10 @@ public class SalesmanService {
 
 //        cities.forEach(x -> System.out.println(x.getX() + " : " + x.getY()));
 
+        for(int i = 0; i < cities.size(); i++) {
+            cities.get(i).setId(i);
+        }
+
         this.route = new Route(cities);
 //        System.out.println(route.getLength());
     }

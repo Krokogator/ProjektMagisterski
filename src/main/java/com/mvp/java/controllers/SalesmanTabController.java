@@ -230,7 +230,14 @@ public class SalesmanTabController {
     }
 
     public void genetic(MouseEvent mouseEvent) {
-        GeneticStrategy geneticStrategy = new GeneticStrategy(100, 50);
-        geneticStrategy.solve(route);
+        GeneticStrategy geneticStrategy = new GeneticStrategy(200, 50);
+        this.route = geneticStrategy.solve(route);
+        try {
+            loadPoints();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        clear();
+        draw();
     }
 }
