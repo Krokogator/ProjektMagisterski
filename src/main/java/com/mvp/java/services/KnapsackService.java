@@ -8,11 +8,13 @@ public class KnapsackService {
 
     IKnapsackStrategy iKnapsackStrategy;
 
-    public void solve(final int[] profit,
+    public boolean[] solve(final int[] profit,
                       final int[] weight,
                       final int maxWeight) {
         boolean[] solution = iKnapsackStrategy.solve(profit, weight, maxWeight);
         printSolution(solution, profit, weight);
+
+        return solution;
     }
 
     private void printSolution(boolean[] solution, int[] profit, int[] weight) {

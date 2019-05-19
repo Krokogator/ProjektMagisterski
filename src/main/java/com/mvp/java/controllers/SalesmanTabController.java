@@ -4,8 +4,8 @@ import com.mvp.java.model.salesman.City;
 import com.mvp.java.model.salesman.Route;
 import com.mvp.java.services.SalesmanService;
 import com.mvp.java.services.TwoOptService;
-import com.mvp.java.strategy.salesman.GeneticStrategy;
-import com.mvp.java.strategy.salesman.SimulatedAnnealingStrategy;
+import com.mvp.java.strategy.salesman.GeneticSalesmanStrategy;
+import com.mvp.java.strategy.salesman.SimulatedAnnealingSalesmanStrategy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -15,7 +15,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import org.apache.sis.distance.DistanceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -218,7 +217,7 @@ public class SalesmanTabController {
     }
 
     public void simulatedAnnealing(MouseEvent mouseEvent) {
-        SimulatedAnnealingStrategy strategy = new SimulatedAnnealingStrategy(0.9999, 1, 10);
+        SimulatedAnnealingSalesmanStrategy strategy = new SimulatedAnnealingSalesmanStrategy(0.9999, 1, 10);
         this.route = strategy.solve(route);
         try {
             loadPoints();
@@ -230,8 +229,8 @@ public class SalesmanTabController {
     }
 
     public void genetic(MouseEvent mouseEvent) {
-        GeneticStrategy geneticStrategy = new GeneticStrategy(200, 50);
-        this.route = geneticStrategy.solve(route);
+        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(100, 50, 1, 0.9);
+        this.route = geneticSalesmanStrategy.solve(route);
         try {
             loadPoints();
         } catch (IOException e) {

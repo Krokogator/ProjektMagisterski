@@ -26,13 +26,13 @@ public class BacktrackingKnapsackStrategy implements IKnapsackStrategy {
         include = new boolean[n+1];
         bestset = new boolean[n+1];
 
-        knapsack(0,0,0);
+        knapsack(-1,0,0);
 
-        for(int i = 1; i <= n ; i++){
+        for(int i = 0; i <= n ; i++){
             System.out.println(i + " : " + bestset[i]);
         }
 
-        return new boolean[0];
+        return bestset;
     }
 
     void knapsack(int i, int profit, int weight){

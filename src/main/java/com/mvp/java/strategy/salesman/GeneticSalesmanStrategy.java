@@ -10,10 +10,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class GeneticStrategy implements ISalesmanStrategy {
+public class GeneticSalesmanStrategy implements ISalesmanStrategy {
 
     private int population;
     private int epochs;
+    private double crossoverRate;
+    private double mutationRate;
 
     private Route route;
     private List<Route> generation = new ArrayList<>();
@@ -25,9 +27,11 @@ public class GeneticStrategy implements ISalesmanStrategy {
     private int currentEpoch;
     private boolean stopConditionNotMet;
 
-    public GeneticStrategy(int population, int epochs) {
+    public GeneticSalesmanStrategy(int population, int epochs, double crossoverRate, double mutationRate) {
         this.population = population;
         this.epochs = epochs;
+        this.crossoverRate = crossoverRate;
+        this.mutationRate = mutationRate;
     }
 
     @Override
@@ -67,15 +71,23 @@ public class GeneticStrategy implements ISalesmanStrategy {
 
     private void runEpoch(){
 
-        this.generation.addAll(crossover());
-//        this.generation = this.generation.stream()
-//                .map(x -> twoOptSwap(x))
-//                .collect(Collectors.toList());
+        List<Route> childGeneration = crossover();
+
+        System.out.println("Generation: " + currentEpoch);
+        System.out.println("BEFORE MUTATE");
+        childGeneration.forEach(x -> System.out.println(x.getLength()));
+
+        childGeneration = mutate(childGeneration);
+
+        System.out.println("AFTER MUTATE");
+        childGeneration.forEach(x -> System.out.println(x.getLength()));
+
+
+        this.generation.addAll(childGeneration);
         evaluateGeneration();
-//        generation.forEach(x -> System.out.println(x.getLength()));
         this.generation = generation.subList(0, population);
-        System.out.println(generation.get(0).getLength());
-        System.out.println(generation.size());
+        System.out.println("BEST: " + generation.get(0).getLength());
+        this.generation.forEach(x -> System.out.println(x.getLength()));
     }
 
     // Sorts from best to worst
@@ -86,10 +98,11 @@ public class GeneticStrategy implements ISalesmanStrategy {
 
     // Implementation of CX2 (Cycle Crossover Operator - Optimised)
     private List<Route> crossover() {
+        int crossoverRate = (int) Math.round(generation.size() * this.crossoverRate);
 
         List<Route> newGeneration = new ArrayList<>();
 
-        while (newGeneration.size() < generation.size()) {
+        while (newGeneration.size() < crossoverRate) {
             // Step 1 - choose two parents for mating
             Route parent1 = selectParent();
             Route parent2 = selectParent();
@@ -181,6 +194,17 @@ public class GeneticStrategy implements ISalesmanStrategy {
         return null;
     }
 
+    private List<Route> mutate (List<Route> generation){
+        int mutations = (int) Math.round(generation.size() * mutationRate);
+
+        while (mutations > 0) {
+
+            generation.set(mutations, twoOptSwap(generation.get(mutations)));
+            mutations--;
+        }
+
+        return generation;
+    }
 
     private Route twoOptSwap(Route route) {
         int k = random.nextInt(route.getCities().size());

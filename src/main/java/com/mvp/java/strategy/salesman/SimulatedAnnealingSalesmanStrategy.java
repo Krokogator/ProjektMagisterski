@@ -4,13 +4,11 @@ import com.mvp.java.model.salesman.City;
 import com.mvp.java.model.salesman.Route;
 import com.mvp.java.strategy.ISalesmanStrategy;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class SimulatedAnnealingStrategy implements ISalesmanStrategy {
+public class SimulatedAnnealingSalesmanStrategy implements ISalesmanStrategy {
 
     private double alpha;
     private double epsilon;
@@ -23,11 +21,11 @@ public class SimulatedAnnealingStrategy implements ISalesmanStrategy {
 
     private Random random;
 
-    public SimulatedAnnealingStrategy(){
+    public SimulatedAnnealingSalesmanStrategy(){
         this.random = new Random();
     }
 
-    public SimulatedAnnealingStrategy(
+    public SimulatedAnnealingSalesmanStrategy(
             double alpha,
             double epsilon,
             double temp
