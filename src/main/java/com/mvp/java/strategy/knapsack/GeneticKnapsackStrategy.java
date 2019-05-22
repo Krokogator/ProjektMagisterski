@@ -124,7 +124,7 @@ public class GeneticKnapsackStrategy implements IKnapsackStrategy {
     }
 
     private boolean[][] mutateGeneration(boolean[][] generation) {
-        int mutations = (int) Math.round(generationSize * mutationRate);
+        int mutations = (int) Math.round(generationSize * mutationRate) - 1;
 
         while (mutations > 0) {
             int gene = random.nextInt(generation[0].length);

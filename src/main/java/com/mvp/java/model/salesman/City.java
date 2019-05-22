@@ -2,6 +2,8 @@ package com.mvp.java.model.salesman;
 
 import org.apache.sis.distance.DistanceUtils;
 
+import java.awt.geom.Point2D;
+
 public class City {
 
     private double x;
@@ -34,8 +36,12 @@ public class City {
         this.id = id;
     }
 
-    public double distance(City city) {
+    public double geoDistance(City city) {
         return DistanceUtils.getHaversineDistance(this.x, this.y, city.getX(), city.getY());
+    }
+
+    public double distance(City city) {
+        return Point2D.distance(this.x, this.y, city.getX(), city.getY());
     }
 
     @Override

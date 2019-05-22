@@ -2,7 +2,6 @@ package com.mvp.java.utils;
 
 import com.mvp.java.model.knapsack.Knapsack;
 import org.springframework.util.ResourceUtils;
-import sun.reflect.misc.FieldUtil;
 
 import java.io.*;
 

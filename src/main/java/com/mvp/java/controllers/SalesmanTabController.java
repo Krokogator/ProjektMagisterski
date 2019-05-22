@@ -68,7 +68,7 @@ public class SalesmanTabController {
         draw();
     }
 
-    private void loadPoints() throws IOException {
+    private void loadUSAPoints() throws IOException {
         List<City> cities = this.route.getCities();
         List<Point2D> points = cities.stream()
                 .map(city -> new Point2D(city.getX(), city.getY()))
@@ -81,6 +81,23 @@ public class SalesmanTabController {
             .collect(Collectors.toList());
     }
 
+    private void loadPoints() throws IOException {
+//        loadUSAPoints();
+        loadXYPoints();
+    }
+
+    private void loadXYPoints() throws IOException {
+        List<City> cities = this.route.getCities();
+        List<Point2D> points = cities.stream()
+                .map(city -> new Point2D(city.getX(), city.getY()))
+                .collect(Collectors.toList());
+
+        this.points = points.stream()
+                .map(point -> {
+                    return new Point2D(point.getX()*1/6, graphCanvas.getHeight() - point.getY()*1/8);
+                })
+                .collect(Collectors.toList());
+    }
 
     private void generatePoints(){
         points = new ArrayList<>();
@@ -217,7 +234,7 @@ public class SalesmanTabController {
     }
 
     public void simulatedAnnealing(MouseEvent mouseEvent) {
-        SimulatedAnnealingSalesmanStrategy strategy = new SimulatedAnnealingSalesmanStrategy(0.9999, 1, 10);
+        SimulatedAnnealingSalesmanStrategy strategy = new SimulatedAnnealingSalesmanStrategy(0.999999, 0.1, 100);
         this.route = strategy.solve(route);
         try {
             loadPoints();
@@ -229,7 +246,7 @@ public class SalesmanTabController {
     }
 
     public void genetic(MouseEvent mouseEvent) {
-        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(100, 1000, 0.95, 0.01);
+        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(250, 4000, 0.05, 0.008);
         this.route = geneticSalesmanStrategy.solve(route);
         try {
             loadPoints();

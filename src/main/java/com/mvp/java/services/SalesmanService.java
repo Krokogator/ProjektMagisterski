@@ -19,7 +19,7 @@ public class SalesmanService {
 
     public void init() throws IOException {
 
-        CSVParser parser = CSVReader.loadCSV("C:\\Users\\micha\\Downloads\\simplemaps_worldcities_basicv1.4\\newworld.csv");
+        CSVParser parser = CSVReader.loadCSV("C:\\Users\\micha\\Downloads\\simplemaps_worldcities_basicv1.4\\brd14501.csv");
 
         List<City> cities = parser.getRecords().stream()
             .map(record -> new City(Double.valueOf(record.get(0)), Double.valueOf(record.get(1))))
