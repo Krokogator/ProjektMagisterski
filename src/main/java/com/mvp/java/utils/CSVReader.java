@@ -12,7 +12,7 @@ public class CSVReader {
 
     public static CSVParser loadCSV(String path) throws IOException {
         File file = new File(path);
-        file = ResourceUtils.getFile("classpath:cities/usaSmall.csv");
+        file = ResourceUtils.getFile("classpath:cities/usaSmall2.csv");
         return CSVParser.parse(file, Charset.forName("UTF-8"), CSVFormat.DEFAULT);
     }
 }

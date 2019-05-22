@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class GeneticSalesmanStrategy implements ISalesmanStrategy {
 
@@ -32,12 +33,12 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
         this.epochs = epochs;
         this.crossoverRate = crossoverRate;
         this.mutationRate = mutationRate;
+        this.random = new SecureRandom();
     }
 
     @Override
     public Route solve(Route route) {
         this.route = route;
-        this.random = new SecureRandom();
         initGeneration();
         generation.set(0, route);
         run();
@@ -74,20 +75,20 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
         List<Route> childGeneration = crossover();
 
         System.out.println("Generation: " + currentEpoch);
-        System.out.println("BEFORE MUTATE");
-        childGeneration.forEach(x -> System.out.println(x.getLength()));
+//        System.out.println("BEFORE MUTATE");
+//        childGeneration.forEach(x -> System.out.println(x.getLength()));
 
         childGeneration = mutate(childGeneration);
 
-        System.out.println("AFTER MUTATE");
-        childGeneration.forEach(x -> System.out.println(x.getLength()));
+//        System.out.println("AFTER MUTATE");
+//        childGeneration.forEach(x -> System.out.println(x.getLength()));
 
 
         this.generation.addAll(childGeneration);
         evaluateGeneration();
         this.generation = generation.subList(0, population);
         System.out.println("BEST: " + generation.get(0).getLength());
-        this.generation.forEach(x -> System.out.println(x.getLength()));
+//        this.generation.forEach(x -> System.out.println(x.getLength()));
     }
 
     // Sorts from best to worst
@@ -98,16 +99,16 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
 
     // Implementation of CX2 (Cycle Crossover Operator - Optimised)
     private List<Route> crossover() {
-        int crossoverRate = (int) Math.round(generation.size() * this.crossoverRate);
+
 
         List<Route> newGeneration = new ArrayList<>();
 
-        while (newGeneration.size() < crossoverRate) {
+        while (newGeneration.size() < generation.size()) {
             // Step 1 - choose two parents for mating
             Route parent1 = selectParent();
             Route parent2 = selectParent();
 
-            Pair<Route, Route> offspringPair = crossover(parent1, parent2);
+            Pair<Route, Route> offspringPair = crossoverPM(parent1, parent2);
             newGeneration.add(offspringPair.getValue());
             newGeneration.add(offspringPair.getKey());
         }
@@ -119,7 +120,7 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
         return newGeneration;
     }
 
-    public Pair<Route, Route> crossover(Route parentRoute1, Route parentRoute2) {
+    public Pair<Route, Route> crossoverCX2(Route parentRoute1, Route parentRoute2) {
         List<City> offspring1 = new ArrayList<>();
         List<City> offspring2 = new ArrayList<>();
 
@@ -170,6 +171,68 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
         return new Pair(new Route(offspring1), new Route(offspring2));
     }
 
+    public Pair<Route, Route> crossoverPM(Route parentRoute1, Route parentRoute2) {
+        List<City> offspring1 = IntStream.range(0, parentRoute1.getCities().size()).mapToObj(x -> new City(-2)).collect(Collectors.toList());
+        List<City> offspring2 = IntStream.range(0, parentRoute1.getCities().size()).mapToObj(x -> new City(-2)).collect(Collectors.toList());
+
+
+
+        List<City> parent1 = parentRoute1.getCities();
+        List<City> parent2 = parentRoute2.getCities();
+
+        int mappingSize = parent1.size() - (int) Math.round(parent1.size() * this.crossoverRate);
+
+        int firstCutPoint = random.nextInt(parent1.size() - mappingSize);
+
+        // mapping
+        for (int i = firstCutPoint; i < firstCutPoint + mappingSize; i++) {
+            offspring1.set(i, parent2.get(i));
+            offspring2.set(i, parent1.get(i));
+        }
+
+        // fill if possible before cut point
+        for (int i = 0; i < firstCutPoint; i++ ) {
+            if (!offspring1.contains(parent1.get(i))) {
+                offspring1.set(i, parent1.get(i));
+            }
+            if (!offspring2.contains(parent2.get(i))) {
+                offspring2.set(i, parent2.get(i));
+            }
+        }
+
+        //fill if possible after cut point
+        for (int i = firstCutPoint + mappingSize; i < parent1.size(); i++ ) {
+            if (!offspring1.contains(parent1.get(i))) {
+                offspring1.set(i, parent1.get(i));
+            }
+            if (!offspring2.contains(parent2.get(i))) {
+                offspring2.set(i, parent2.get(i));
+            }
+        }
+
+        for (int i = 0; i < parent1.size(); i++ ) {
+            if (offspring1.get(i).getId() == -2) {
+                offspring1.set(i, findMap(parent1.get(i), offspring1, offspring2));
+            }
+            if (offspring2.get(i).getId() == -2) {
+                offspring2.set(i, findMap(parent2.get(i), offspring2, offspring1));
+            }
+        }
+
+
+        return new Pair<>(new Route(offspring1), new Route(offspring2));
+    }
+
+    private City findMap(City city, List<City> offspring1, List<City> offspring2) {
+        int index = offspring1.indexOf(city);
+        City potential = offspring2.get(index);
+        if (offspring1.contains(potential)) {
+            return findMap(potential, offspring1, offspring2);
+        }
+
+        return potential;
+    }
+
     private Route selectParent() {
         double size = 0;
         double[] rouletteWheel = new double[generation.size()];
@@ -195,24 +258,18 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
     }
 
     private List<Route> mutate (List<Route> generation){
-        int mutations = (int) Math.round(generation.size() * mutationRate);
+        int twoOptSize = (int) Math.round(generation.get(0).getCities().size() * this.crossoverRate);
 
-        while (mutations > 0) {
-
-            generation.set(mutations, twoOptSwap(generation.get(mutations)));
-            mutations--;
-        }
-
-        return generation;
+        return generation.stream()
+                .map(route -> twoOptSwap(route, twoOptSize))
+                .collect(Collectors.toList());
     }
 
-    private Route twoOptSwap(Route route) {
-        int k = random.nextInt(route.getCities().size());
-        while (k <= 0) {
-            k = random.nextInt(route.getCities().size());
-        }
-        int i = random.nextInt(k);
-        return createNewCandidate(i, k, route);
+    private Route twoOptSwap(Route route, int twoOptSize) {
+        twoOptSize = random.nextInt(twoOptSize);
+        int firstCutPoint = random.nextInt(route.getCities().size() - twoOptSize);
+        int i = firstCutPoint + twoOptSize;
+        return createNewCandidate(firstCutPoint, i, route);
     }
 
     private Route createNewCandidate(int i, int k, Route route) {

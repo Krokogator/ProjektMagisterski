@@ -229,7 +229,7 @@ public class SalesmanTabController {
     }
 
     public void genetic(MouseEvent mouseEvent) {
-        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(100, 50, 1, 0.9);
+        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(100, 1000, 0.5, 0.2);
         this.route = geneticSalesmanStrategy.solve(route);
         try {
             loadPoints();
