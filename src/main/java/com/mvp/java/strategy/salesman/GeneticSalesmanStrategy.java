@@ -266,10 +266,12 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
     }
 
     private Route twoOptSwap(Route route, int twoOptSize) {
-        twoOptSize = random.nextInt(twoOptSize);
-        int firstCutPoint = random.nextInt(route.getCities().size() - twoOptSize);
-        int i = firstCutPoint + twoOptSize;
-        return createNewCandidate(firstCutPoint, i, route);
+        int k = random.nextInt(route.getCities().size());
+        while (k <= 0) {
+            k = random.nextInt(route.getCities().size());
+        }
+        int i = random.nextInt(k);
+        return createNewCandidate(i, k, route);
     }
 
     private Route createNewCandidate(int i, int k, Route route) {

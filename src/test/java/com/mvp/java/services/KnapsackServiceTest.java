@@ -1,12 +1,15 @@
 package com.mvp.java.services;
 
+import com.mvp.java.model.knapsack.Knapsack;
 import com.mvp.java.strategy.knapsack.BacktrackingKnapsackStrategy;
 import com.mvp.java.strategy.knapsack.GeneticKnapsackStrategy;
+import com.mvp.java.utils.KnapsackReader;
 import javafx.util.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -25,7 +28,7 @@ class KnapsackServiceTest {
 
         this.maxWeight = 6404180;
 
-        Integer[] weight2 = {
+        int[] weight2 = {
                 382745,
                 799601,
                 909247,
@@ -52,7 +55,7 @@ class KnapsackServiceTest {
                 169684
         };
 
-        Integer[] profit2 = {
+        int[] profit2 = {
                 825594,
                 1677009,
                 1676628,
@@ -78,6 +81,20 @@ class KnapsackServiceTest {
                 466257,
                 369261
         };
+
+        Knapsack knapsack = null;
+        try {
+            knapsack = KnapsackReader.load("large_scale/knapPI_3_10000_1000_1");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // NEW
+
+        profit2 = knapsack.getProfit();
+        weight2 = knapsack.getWeight();
+        this.maxWeight = knapsack.getMaxWeight();
+
+        // NEW
 
         List<Pair<Integer, Integer>> map = new ArrayList<>();
         for(int i = 0; i< profit2.length; i++){
@@ -115,7 +132,7 @@ class KnapsackServiceTest {
 
     @Test
     public void geneticKnapsack() {
-        knapsackService.setStrategy(new GeneticKnapsackStrategy(50, 500, 0.5));
+        knapsackService.setStrategy(new GeneticKnapsackStrategy(200, 500, 0.9));
         boolean[] result = knapsackService.solve(profit, weight, maxWeight);
 
         printResult(result);
@@ -135,5 +152,6 @@ class KnapsackServiceTest {
 
         System.out.println(totalProfit);
         System.out.println(capacity);
+        System.out.println(this.maxWeight);
     }
 }

@@ -35,7 +35,7 @@ public class GeneticKnapsackStrategy implements IKnapsackStrategy {
         this.generation = new boolean[generationSize][profit.length];
         for (int i = 0; i < generationSize; i++) {
             for (int j = 0; j < profit.length; j++) {
-                this.generation[i][j] = random.nextBoolean();
+                this.generation[i][j] = false;
             }
         }
         this.profit = profit;
