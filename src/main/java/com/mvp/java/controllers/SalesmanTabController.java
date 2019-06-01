@@ -6,6 +6,7 @@ import com.mvp.java.services.SalesmanService;
 import com.mvp.java.services.TwoOptService;
 import com.mvp.java.strategy.salesman.GeneticSalesmanStrategy;
 import com.mvp.java.strategy.salesman.SimulatedAnnealingSalesmanStrategy;
+import com.mvp.java.utils.CanvasRedrawTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -52,6 +53,7 @@ public class SalesmanTabController {
 
     public void initialize(){
         gc = graphCanvas.getGraphicsContext2D();
+        task = new CanvasRedrawTask(graphCanvas);
         this.cityColorPicker.setValue(cityColor);
         this.roadColorPicker.setValue(roadColor);
         this.cityCountInput.setText(String.valueOf(cityCount));
@@ -82,8 +84,8 @@ public class SalesmanTabController {
     }
 
     private void loadPoints() throws IOException {
-//        loadUSAPoints();
-        loadXYPoints();
+        loadUSAPoints();
+//        loadXYPoints();
     }
 
     private void loadXYPoints() throws IOException {
@@ -197,6 +199,7 @@ public class SalesmanTabController {
     }
 
     public void clear(){
+        gc.clearRect(0, 0, graphCanvas.getWidth(), graphCanvas.getHeight());
         gc.setFill(backgroundColor);
         gc.fillRect(0,0,graphCanvas.getWidth(), graphCanvas.getHeight());
     }
@@ -234,8 +237,49 @@ public class SalesmanTabController {
     }
 
     public void simulatedAnnealing(MouseEvent mouseEvent) {
-        SimulatedAnnealingSalesmanStrategy strategy = new SimulatedAnnealingSalesmanStrategy(0.999999, 0.1, 100);
-        this.route = strategy.solve(route);
+        SimulatedAnnealingSalesmanStrategy strategy = new SimulatedAnnealingSalesmanStrategy(0.999999, 0.001, 30, this);
+
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                strategy.solve(route);
+            }
+        });
+        t1.start();
+
+
+
+//        try {
+//            loadPoints();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        clear();
+//        draw();
+    }
+
+    public void genetic(MouseEvent mouseEvent) {
+        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(250, 4000, 0.05, 0.008, this);
+
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                geneticSalesmanStrategy.solve(route);
+            }
+        });
+        t1.start();
+////        this.route =
+//        try {
+//            loadPoints();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        clear();
+//        draw();
+    }
+
+    public void draw(Route route) {
+        this.route = route;
         try {
             loadPoints();
         } catch (IOException e) {
@@ -245,15 +289,14 @@ public class SalesmanTabController {
         draw();
     }
 
-    public void genetic(MouseEvent mouseEvent) {
-        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(250, 4000, 0.05, 0.008);
-        this.route = geneticSalesmanStrategy.solve(route);
-        try {
-            loadPoints();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        clear();
-        draw();
+    private CanvasRedrawTask task;
+
+
+    public void onDataReceived(Route route) {
+        // process data / prepare for redraw task
+        // ...
+
+        // handover data to redraw task
+        task.requestRedraw(route);
     }
 }

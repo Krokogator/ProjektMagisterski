@@ -1,8 +1,10 @@
 package com.mvp.java.strategy.salesman;
 
+import com.mvp.java.controllers.SalesmanTabController;
 import com.mvp.java.model.salesman.City;
 import com.mvp.java.model.salesman.Route;
 import com.mvp.java.strategy.ISalesmanStrategy;
+import javafx.application.Platform;
 import javafx.util.Pair;
 
 import java.security.SecureRandom;
@@ -28,12 +30,15 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
     private int currentEpoch;
     private boolean stopConditionNotMet;
 
-    public GeneticSalesmanStrategy(int population, int epochs, double crossoverRate, double mutationRate) {
+    private SalesmanTabController salesmanTabController;
+
+    public GeneticSalesmanStrategy(int population, int epochs, double crossoverRate, double mutationRate, SalesmanTabController salesmanTabController) {
         this.population = population;
         this.epochs = epochs;
         this.crossoverRate = crossoverRate;
         this.mutationRate = mutationRate;
         this.random = new SecureRandom();
+        this.salesmanTabController = salesmanTabController;
     }
 
     @Override
@@ -59,6 +64,14 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
         while(stopConditionNotMet) {
             runEpoch();
             updateStopCondition();
+
+            Route best = generation.get(0).clone();
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    salesmanTabController.onDataReceived(best);
+//                    salesmanTabController.draw(toDraw);
+                }
+            });
         }
     }
 
@@ -93,7 +106,7 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
 
     // Sorts from best to worst
     private void evaluateGeneration() {
-        generation.sort((o1, o2) -> (int) Math.round(o1.getLength() - o2.getLength()));
+        generation.sort(Comparator.comparingDouble(Route::getLength));
 
     }
 

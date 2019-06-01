@@ -1,8 +1,10 @@
 package com.mvp.java.strategy.salesman;
 
+import com.mvp.java.controllers.SalesmanTabController;
 import com.mvp.java.model.salesman.City;
 import com.mvp.java.model.salesman.Route;
 import com.mvp.java.strategy.ISalesmanStrategy;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ public class SimulatedAnnealingSalesmanStrategy implements ISalesmanStrategy {
 
     private Random random;
 
+    private SalesmanTabController salesmanTabController;
+
     public SimulatedAnnealingSalesmanStrategy(){
         this.random = new Random();
     }
@@ -28,12 +32,14 @@ public class SimulatedAnnealingSalesmanStrategy implements ISalesmanStrategy {
     public SimulatedAnnealingSalesmanStrategy(
             double alpha,
             double epsilon,
-            double temp
+            double temp,
+            SalesmanTabController salesmanTabController
     ) {
         this();
         this.alpha = alpha;
         this.epsilon = epsilon;
         this.tempStart = temp;
+        this.salesmanTabController = salesmanTabController;
     }
 
     @Override
@@ -66,6 +72,29 @@ public class SimulatedAnnealingSalesmanStrategy implements ISalesmanStrategy {
 
         } else if (isAccepted()) {
             this.current = candidate.clone();
+
+            Route toDraw = current.clone();
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    salesmanTabController.onDataReceived(current.clone());
+//                    salesmanTabController.draw(toDraw);
+                }
+            });
+//            final boolean[] busy = {false};
+//            Thread t1 = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    busy[0] = true;
+//                    salesmanTabController.draw(toDraw);
+//                    busy[0] = false;
+//                }
+//            });
+//            if (busy[0] == false) {
+//                t1.start();
+//            }
+
+
+
             System.out.println(current.getLength());
 
         }
