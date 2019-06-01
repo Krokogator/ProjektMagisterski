@@ -16,9 +16,12 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -37,6 +40,7 @@ public class SalesmanTabController {
     @FXML public TextField cityCountInput;
     @FXML public ColorPicker cityColorPicker;
     @FXML public ColorPicker roadColorPicker;
+    private Stage stage;
     private GraphicsContext gc;
     private List<Point2D> points;
     private Route route;
@@ -51,7 +55,11 @@ public class SalesmanTabController {
     private double verticalMargin = 10;
     private Color backgroundColor = Color.gray(0.12);
 
+    private FileChooser fileChooser;
+
     public void initialize(){
+
+        this.fileChooser = new FileChooser();
         gc = graphCanvas.getGraphicsContext2D();
         task = new CanvasRedrawTask(this);
         this.cityColorPicker.setValue(cityColor);
@@ -70,7 +78,7 @@ public class SalesmanTabController {
         draw();
     }
 
-    private void loadUSAPoints() throws IOException {
+    private void loadUSAPoints() {
         List<City> cities = this.route.getCities();
         List<Point2D> points = cities.stream()
                 .map(city -> new Point2D(city.getX(), city.getY()))
@@ -83,12 +91,12 @@ public class SalesmanTabController {
             .collect(Collectors.toList());
     }
 
-    private void loadPoints() throws IOException {
-        loadUSAPoints();
-//        loadXYPoints();
+    private void loadPoints() {
+//        loadUSAPoints();
+        loadXYPoints();
     }
 
-    private void loadXYPoints() throws IOException {
+    private void loadXYPoints() {
         List<City> cities = this.route.getCities();
         List<Point2D> points = cities.stream()
                 .map(city -> new Point2D(city.getX(), city.getY()))
@@ -139,11 +147,7 @@ public class SalesmanTabController {
         futureCities.whenCompleteAsync((route, throwable) -> {
             this.route = route;
             clear();
-            try {
-                loadPoints();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            loadPoints();
             draw();
         });
 
@@ -167,7 +171,7 @@ public class SalesmanTabController {
 
         drawRoad(lastPoint.getX(), lastPoint.getY(),
                 firstPoint.getX(), firstPoint.getY());
-        drawCity(firstPoint.getX(), firstPoint.getY());
+
 
         //All other
         for(int i = 1; i < points.size(); i++){
@@ -186,6 +190,14 @@ public class SalesmanTabController {
             drawCity(p.getX(), p.getY());
         }
 
+        drawCity(firstPoint.getX(), firstPoint.getY());
+
+    }
+
+    private void redraw() throws IOException {
+        loadPoints();
+        clear();
+        draw();
     }
 
     private void drawCity(double x, double y) {
@@ -269,23 +281,11 @@ public class SalesmanTabController {
             }
         });
         t1.start();
-////        this.route =
-//        try {
-//            loadPoints();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        clear();
-//        draw();
     }
 
     public void draw(Route route) {
         this.route = route;
-        try {
-            loadPoints();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadPoints();
         clear();
         draw();
     }
@@ -299,5 +299,31 @@ public class SalesmanTabController {
 
         // handover data to redraw task
         task.requestRedraw(route);
+    }
+
+    public void chooseFile(MouseEvent mouseEvent) {
+        Stage stage = (Stage) graphCanvas.getScene().getWindow();
+
+
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(
+//                new ExtensionFilter("Text Files", "*.txt"),
+//                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+//                new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+
+        if (selectedFile != null) {
+            try {
+                System.out.println(selectedFile.getName());
+                this.route = salesmanService.getRoute(selectedFile);
+                redraw();
+                fileChooser.setInitialDirectory(selectedFile.getParentFile());
+            } catch (IOException e) {
+                System.out.println("Failed to get route from file!");
+            }
+        }
+
     }
 }

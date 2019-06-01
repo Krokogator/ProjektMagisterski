@@ -17,11 +17,13 @@
                 <children>
                     <VBox>
                         <children>
+                            <Button mnemonicParsing="false" onMouseClicked="#chooseFile" text="Input" GridPane.rowIndex="1" />
                             <Button mnemonicParsing="false" onMouseClicked="#reinitialize" text="Reinitialize" GridPane.rowIndex="1" />
                             <TextField fx:id="cityCountInput" maxWidth="100" />
                             <Button mnemonicParsing="false" onMouseClicked="#orderTwoOpt" text="2 Opt swap" GridPane.rowIndex="1" />
                             <Button mnemonicParsing="false" onMouseClicked="#simulatedAnnealing" text="Simulated Annealing" GridPane.rowIndex="1" />
                             <Button mnemonicParsing="false" onMouseClicked="#genetic" text="Genetic" GridPane.rowIndex="1" />
+
                         </children>
                     </VBox>
                     <VBox>
