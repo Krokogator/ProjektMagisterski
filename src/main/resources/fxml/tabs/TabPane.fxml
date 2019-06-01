@@ -10,6 +10,7 @@
         <TabPane prefHeight="368.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
                 <fx:include fx:id="GraphTab" source="SalesmanTab.fxml" />
+                <fx:include fx:id="KnapsackTab" source="KnapsackTab.fxml" />
             </tabs>
         </TabPane>
     </children>

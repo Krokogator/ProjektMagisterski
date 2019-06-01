@@ -42,9 +42,9 @@ public class SalesmanTabController {
     private Route route;
 
     private int cityCount = 70;
-    private double citySize = 4.5;
+    private double citySize = 2.5;
     private Color cityColor = Color.valueOf("#e5e5e5");
-    private double roadSize = 2.5;
+    private double roadSize = 1.5;
     private Color roadColor = Color.valueOf("#4d4d4d");
 
     private double horizontalMargin = 10;
@@ -53,7 +53,7 @@ public class SalesmanTabController {
 
     public void initialize(){
         gc = graphCanvas.getGraphicsContext2D();
-        task = new CanvasRedrawTask(graphCanvas);
+        task = new CanvasRedrawTask(this);
         this.cityColorPicker.setValue(cityColor);
         this.roadColorPicker.setValue(roadColor);
         this.cityCountInput.setText(String.valueOf(cityCount));
@@ -164,9 +164,10 @@ public class SalesmanTabController {
         Point2D firstPoint = points.get(0);
         Point2D lastPoint = points.get(points.size() - 1);
 
-        drawCity(firstPoint.getX(), firstPoint.getY());
+
         drawRoad(lastPoint.getX(), lastPoint.getY(),
                 firstPoint.getX(), firstPoint.getY());
+        drawCity(firstPoint.getX(), firstPoint.getY());
 
         //All other
         for(int i = 1; i < points.size(); i++){
