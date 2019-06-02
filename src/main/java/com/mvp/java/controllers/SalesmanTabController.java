@@ -6,6 +6,7 @@ import com.mvp.java.services.SalesmanService;
 import com.mvp.java.services.TwoOptService;
 import com.mvp.java.strategy.salesman.GeneticSalesmanStrategy;
 import com.mvp.java.strategy.salesman.SimulatedAnnealingSalesmanStrategy;
+import com.mvp.java.utils.CanvasInfoTask;
 import com.mvp.java.utils.CanvasRedrawTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -37,9 +39,23 @@ public class SalesmanTabController {
     TwoOptService twoOptService;
 
     @FXML private Canvas graphCanvas;
-    @FXML public TextField cityCountInput;
     @FXML public ColorPicker cityColorPicker;
     @FXML public ColorPicker roadColorPicker;
+
+    // Simulated annealing
+    // Inputs
+
+    @FXML private TextField inputTemp;
+    @FXML private TextField inputEpsilon;
+    @FXML private TextField inputAlpha;
+
+    // Outputs
+
+    @FXML private Label outputTemp;
+    @FXML private Label outputCurrent;
+    @FXML private Label outputBest;
+
+
     private Stage stage;
     private GraphicsContext gc;
     private List<Point2D> points;
@@ -61,12 +77,11 @@ public class SalesmanTabController {
 
         this.fileChooser = new FileChooser();
         gc = graphCanvas.getGraphicsContext2D();
-        task = new CanvasRedrawTask(this);
+        redrawTask = new CanvasRedrawTask(this);
+        infoTask = new CanvasInfoTask(this);
         this.cityColorPicker.setValue(cityColor);
         this.roadColorPicker.setValue(roadColor);
-        this.cityCountInput.setText(String.valueOf(cityCount));
         clear();
-//        generatePoints();
         try {
             salesmanService.init();
             this.route = salesmanService.getRoute();
@@ -219,12 +234,6 @@ public class SalesmanTabController {
 
     public void reinitialize() {
         clear();
-        String input = cityCountInput.getText();
-        try{
-            cityCount = Integer.valueOf(cityCountInput.getText());
-        } catch (Exception e) {
-            System.out.println("Invalid cities number");
-        }
         generatePoints();
         draw();
     }
@@ -250,7 +259,11 @@ public class SalesmanTabController {
     }
 
     public void simulatedAnnealing(MouseEvent mouseEvent) {
-        SimulatedAnnealingSalesmanStrategy strategy = new SimulatedAnnealingSalesmanStrategy(0.999999, 0.001, 30, this);
+
+        Double temp = Double.valueOf(Optional.of(inputTemp.getText()).orElse("10"));
+        Double eps = Double.valueOf(Optional.of(inputEpsilon.getText()).orElse("0.01"));
+        Double alpha = Double.valueOf(Optional.of(inputAlpha.getText()).orElse("0.9"));
+        SimulatedAnnealingSalesmanStrategy strategy = new SimulatedAnnealingSalesmanStrategy(alpha, eps, temp, this);
 
         Thread t1 = new Thread(new Runnable() {
             @Override
@@ -290,15 +303,16 @@ public class SalesmanTabController {
         draw();
     }
 
-    private CanvasRedrawTask task;
+    private CanvasRedrawTask redrawTask;
+    private CanvasInfoTask infoTask;
 
 
-    public void onDataReceived(Route route) {
-        // process data / prepare for redraw task
-        // ...
+    public void redrawRoute(Route route) {
+        redrawTask.requestRedraw(route);
+    }
 
-        // handover data to redraw task
-        task.requestRedraw(route);
+    public void redrawInfo(Map<String,String> info) {
+        infoTask.requestInfo(info);
     }
 
     public void chooseFile(MouseEvent mouseEvent) {
@@ -324,6 +338,16 @@ public class SalesmanTabController {
                 System.out.println("Failed to get route from file!");
             }
         }
+    }
+
+    public void updateTSPInfo(Map<String, String> infoMap) {
+        String temp = infoMap.getOrDefault("outputTemp", "0");
+        String current = infoMap.getOrDefault("outputCurrent", "0");
+        String best = infoMap.getOrDefault("outputBest", "0");
+
+        outputTemp.setText(temp);
+        outputCurrent.setText(current);
+        outputBest.setText(best);
 
     }
 }

@@ -68,7 +68,7 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
             Route best = generation.get(0).clone();
             Platform.runLater(new Runnable() {
                 @Override public void run() {
-                    salesmanTabController.onDataReceived(best);
+                    salesmanTabController.redrawRoute(best);
 //                    salesmanTabController.draw(toDraw);
                 }
             });

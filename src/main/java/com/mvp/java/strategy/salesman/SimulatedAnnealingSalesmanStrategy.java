@@ -6,9 +6,8 @@ import com.mvp.java.model.salesman.Route;
 import com.mvp.java.strategy.ISalesmanStrategy;
 import javafx.application.Platform;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class SimulatedAnnealingSalesmanStrategy implements ISalesmanStrategy {
 
@@ -74,32 +73,38 @@ public class SimulatedAnnealingSalesmanStrategy implements ISalesmanStrategy {
             this.current = candidate.clone();
 
             Route toDraw = current.clone();
+
             Platform.runLater(new Runnable() {
                 @Override public void run() {
-                    salesmanTabController.onDataReceived(current.clone());
-//                    salesmanTabController.draw(toDraw);
+                    salesmanTabController.redrawRoute(toDraw);
                 }
             });
-//            final boolean[] busy = {false};
-//            Thread t1 = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    busy[0] = true;
-//                    salesmanTabController.draw(toDraw);
-//                    busy[0] = false;
-//                }
-//            });
-//            if (busy[0] == false) {
-//                t1.start();
-//            }
-
-
-
-            System.out.println(current.getLength());
-
         }
+        Map<String, String> info = getInfoMap();
+
+        Thread t = new Thread(() -> {
+            salesmanTabController.redrawInfo(info);
+        });
+
+        t.run();
+
+//        Platform.runLater(new Runnable() {
+//            @Override public void run() {
+//                salesmanTabController.redrawInfo(info);
+//            }
+//        });
 
         decreaseTemp();
+    }
+
+    private Map<String, String> getInfoMap() {
+        Map<String, String> info = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.#######");
+        info.put("outputTemp", String.valueOf(df.format(tempCurrent)));
+        info.put("outputCurrent", String.valueOf(df.format(current.getLength())));
+        info.put("outputBest", String.valueOf(df.format(best.getLength())));
+
+        return info;
     }
 
     private void swapRandomTwo(){

@@ -11,24 +11,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class CanvasRedrawTask extends AnimationTimer {
-    private final AtomicReference<Route> data = new AtomicReference<Route>(null);
+public class CanvasInfoTask extends AnimationTimer {
+    private final AtomicReference<Map<String, String>> info = new AtomicReference<>(null);
     private final SalesmanTabController salesmanTabController;
 
-    public CanvasRedrawTask(SalesmanTabController salesmanTabController) {
+    public CanvasInfoTask(SalesmanTabController salesmanTabController) {
         this.salesmanTabController = salesmanTabController;
     }
 
-    public void requestRedraw(Route dataToDraw) {
-        data.set(dataToDraw);
+    public void requestInfo(Map<String, String> info) {
+        this.info.set(info);
         start(); // in case, not already started
     }
 
     public void handle(long now) {
         // check if new data is available
-        Route dataToDraw = data.getAndSet(null);
-        if (dataToDraw != null) {
-            redraw(dataToDraw);
+        Map<String, String> info = this.info.getAndSet(null);
+        if (info != null) {
+            redraw(info);
         }
     }
 
@@ -38,8 +38,8 @@ public class CanvasRedrawTask extends AnimationTimer {
     private GraphicsContext gc;
 
 
-    protected void redraw(Route route) {
-        salesmanTabController.draw(route);
+    protected void redraw(Map<String, String> info) {
+        salesmanTabController.updateTSPInfo(info);
     }
 
 

@@ -5,11 +5,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Tab?>
 <AnchorPane id="tabbedDisplayAnchor" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mvp.java.controllers.TabPaneController">
     <children>
         <TabPane prefHeight="368.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
-                <fx:include fx:id="GraphTab" source="SalesmanTab.fxml" />
+                <Tab text="Travelling salesman" >
+                    <fx:include fx:id="GraphTab" source="SalesmanTab.fxml" />
+                </Tab>
+
                 <fx:include fx:id="KnapsackTab" source="KnapsackTab.fxml" />
             </tabs>
         </TabPane>
