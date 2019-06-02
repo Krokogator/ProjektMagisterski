@@ -28,7 +28,7 @@ class KnapsackServiceTest {
 
         Knapsack knapsack = null;
         try {
-            knapsack = KnapsackReader.load("large_scale/knapPI_1_10000_1000_1");
+            knapsack = KnapsackReader.load("large_scale/knapPI_1_1000_1000_1");
         } catch (IOException e) {
             e.printStackTrace();
         }

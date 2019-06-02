@@ -1,11 +1,11 @@
 package com.mvp.java.strategy.knapsack;
 
+import com.mvp.java.controllers.KnapsackTabController;
 import com.mvp.java.strategy.IKnapsackStrategy;
+import javafx.application.Platform;
 import javafx.util.Pair;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GeneticKnapsackStrategy implements IKnapsackStrategy {
 
@@ -23,7 +23,11 @@ public class GeneticKnapsackStrategy implements IKnapsackStrategy {
     private boolean[][] generation;
     private Random random;
 
-    public GeneticKnapsackStrategy(int epochs, int generationSize, double mutationRate) {
+    private KnapsackTabController knapsackTabController;
+
+    public GeneticKnapsackStrategy(int epochs, int generationSize, double mutationRate, KnapsackTabController knapsackTabController) {
+        this.knapsackTabController = knapsackTabController;
+
         this.epochs = epochs;
         this.generationSize = generationSize;
         this.mutationRate= mutationRate;
@@ -54,7 +58,41 @@ public class GeneticKnapsackStrategy implements IKnapsackStrategy {
 
         for (int i = 0 ; i < epochs ; i++) {
             runEpoch();
+
+
+            Map<String, String> info = new HashMap<>();
+
+            int epoch = i + 1;
+
+            this.generation = orderize(this.generation);
+            info.put("outputProfit", String.valueOf(getProfit()));
+            info.put("outputWeight", String.valueOf(getWeight()));
+            info.put("outputGeneration", String.valueOf(epoch));
+
+            Platform.runLater(() -> {
+                knapsackTabController.redrawInfo(info);
+            });
         }
+    }
+
+    private int getProfit(){
+        int bestProfit = 0;
+        for(int i = 0; i< generation[0].length; i++) {
+            if (generation[0][i]) {
+                bestProfit += profit[i];
+            }
+        }
+        return bestProfit;
+    }
+
+    private int getWeight(){
+        int bestWeight = 0;
+        for(int i = 0; i< generation[0].length; i++) {
+            if (generation[0][i]) {
+                bestWeight += weight[i];
+            }
+        }
+        return bestWeight;
     }
 
     private void runEpoch() {

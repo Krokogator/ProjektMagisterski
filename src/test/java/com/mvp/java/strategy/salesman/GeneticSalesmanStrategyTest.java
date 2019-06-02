@@ -15,7 +15,7 @@ class GeneticSalesmanStrategyTest {
 
     @Test
     void crossoverWithOneCycle() {
-        GeneticSalesmanStrategy strategy = new GeneticSalesmanStrategy(100, 1, 1, 1);
+        GeneticSalesmanStrategy strategy = new GeneticSalesmanStrategy(100, 1, 1, 1, null);
 
         List<Integer> p1 = Arrays.asList(3, 4, 8, 2, 7, 1, 6, 5);
         List<Integer> p2 = Arrays.asList(4, 2, 5, 1, 6, 8, 3, 7);
@@ -34,7 +34,7 @@ class GeneticSalesmanStrategyTest {
 
     @Test
     void crossoverWithMultipleCycles() {
-        GeneticSalesmanStrategy strategy = new GeneticSalesmanStrategy(100, 1, 1, 1);
+        GeneticSalesmanStrategy strategy = new GeneticSalesmanStrategy(100, 1, 1, 1, null);
 
         List<Integer> p1 = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
         List<Integer> p2 = Arrays.asList(2, 7, 5, 8, 4, 1, 6, 3);
@@ -53,7 +53,7 @@ class GeneticSalesmanStrategyTest {
 
     @Test
     void crossoverPM() {
-        GeneticSalesmanStrategy strategy = new GeneticSalesmanStrategy(100, 1, 0.5, 0.9);
+        GeneticSalesmanStrategy strategy = new GeneticSalesmanStrategy(100, 1, 0.5, 0.9, null);
 
         List<Integer> p1 = Arrays.asList(3, 4, 8, 2, 7, 1, 6, 5);
         List<Integer> p2 = Arrays.asList(4, 2, 5, 1, 6, 8, 3, 7);

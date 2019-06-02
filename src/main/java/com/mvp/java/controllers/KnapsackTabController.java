@@ -4,6 +4,8 @@ import com.mvp.java.model.knapsack.Knapsack;
 import com.mvp.java.services.KnapsackService;
 import com.mvp.java.strategy.knapsack.BacktrackingKnapsackStrategy;
 import com.mvp.java.strategy.knapsack.GeneticKnapsackStrategy;
+import com.mvp.java.utils.KnapsackBacktrackInfoTask;
+import com.mvp.java.utils.KnapsackGeneticInfoTask;
 import com.mvp.java.utils.KnapsackReader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -17,10 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class KnapsackTabController {
@@ -52,8 +51,13 @@ public class KnapsackTabController {
     private int[] profit;
     private int[] weight;
 
+    private KnapsackGeneticInfoTask task;
+    private KnapsackBacktrackInfoTask backTask;
+
     public void initialize() {
         initFileChooser();
+        this.task = new KnapsackGeneticInfoTask(this);
+        this.backTask = new KnapsackBacktrackInfoTask(this);
     }
 
     private void initFileChooser() {
@@ -114,38 +118,64 @@ public class KnapsackTabController {
         return Integer.valueOf(inputMaxWeight.getText());
     }
 
-    public void runBacktracking(MouseEvent mouseEvent) {
-        knapsackService.setStrategy(new BacktrackingKnapsackStrategy());
-        boolean[] result = knapsackService.solve(profit.clone(), weight.clone(), getMaxWeight());
-
-        int profit = 0;
-        int weight = 0;
-        for (int i = 0; i < result.length; i++) {
-            if (result[i]) {
-                profit += this.profit[i];
-                weight += this.weight[i];
+    private void setProfitAndWeightLabel(Label outputProfit, Label outputWeight) {
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                knapsackService.solve(profit.clone(), weight.clone(), getMaxWeight());
             }
-        }
+        });
+        t1.start();
 
-        outputBackProfit.setText(String.valueOf(profit));
-        outputBackWeight.setText(String.valueOf(weight));
+
+//        int profit = 0;
+//        int weight = 0;
+//        for (int i = 0; i < result.length; i++) {
+//            if (result[i]) {
+//                profit += this.profit[i];
+//                weight += this.weight[i];
+//            }
+//        }
+//
+//        outputProfit.setText(String.valueOf(profit));
+//        outputWeight.setText(String.valueOf(weight));
     }
+
+
+    public void runBacktracking(MouseEvent mouseEvent) {
+        knapsackService.setStrategy(new BacktrackingKnapsackStrategy(this));
+        setProfitAndWeightLabel(outputBackProfit, outputBackWeight);
+    }
+
 
     public void runGenetic(MouseEvent mouseEvent) {
-//        knapsackService.setStrategy(new GeneticKnapsackStrategy());
-        boolean[] result = knapsackService.solve(profit.clone(), weight.clone(), getMaxWeight());
+        int epochs = Integer.valueOf(inputMaxGeneration.getText());
+        int populationSize = Integer.valueOf(inputPopulationSize.getText());
+        double mutationRate = Double.valueOf(inputMutationRate.getText());
 
-        int profit = 0;
-        int weight = 0;
-        for (int i = 0; i < result.length; i++) {
-            if (result[i]) {
-                profit += this.profit[i];
-                weight += this.weight[i];
-            }
-        }
+        knapsackService.setStrategy(new GeneticKnapsackStrategy(epochs, populationSize, mutationRate, this));
+        setProfitAndWeightLabel(outGeneticProfit, outGeneticWeight);
 
 
     }
 
 
+    public void updateGeneticInfo(Map<String, String> info) {
+        outGeneticGeneration.setText(info.get("outputGeneration"));
+        outGeneticWeight.setText(info.get("outputWeight"));
+        outGeneticProfit.setText(info.get("outputProfit"));
+    }
+
+    public void updateBackInfo(Map<String, String> info) {
+        outputBackProfit.setText(info.get("outputBackProfit"));
+        outputBackWeight.setText(info.get("outputBackWeight"));
+    }
+
+    public void redrawInfo(Map<String,String> info) {
+        task.requestInfo(info);
+    }
+
+    public void redrawBackInfo(Map<String, String> info) {
+        backTask.requestInfo(info);
+    }
 }

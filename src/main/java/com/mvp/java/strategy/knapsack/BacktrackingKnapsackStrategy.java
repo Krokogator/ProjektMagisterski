@@ -1,6 +1,11 @@
 package com.mvp.java.strategy.knapsack;
 
+import com.mvp.java.controllers.KnapsackTabController;
 import com.mvp.java.strategy.IKnapsackStrategy;
+import javafx.application.Platform;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BacktrackingKnapsackStrategy implements IKnapsackStrategy {
 
@@ -14,8 +19,15 @@ public class BacktrackingKnapsackStrategy implements IKnapsackStrategy {
     boolean[] include;
     int n;
 
+    private KnapsackTabController knapsackTabController;
+
+    public BacktrackingKnapsackStrategy(KnapsackTabController knapsackTabController){
+        this.knapsackTabController = knapsackTabController;
+    }
+
     @Override
     public boolean[] solve(int[] profit, int[] weight, int maxWeight) {
+
         this.p = profit;
         this.w = weight;
         this.maxWeight = maxWeight;
@@ -32,7 +44,35 @@ public class BacktrackingKnapsackStrategy implements IKnapsackStrategy {
             System.out.println(i + " : " + bestset[i]);
         }
 
+        Map<String, String> info = new HashMap<>();
+        info.put("outputBackProfit", String.valueOf(getProfit()));
+        info.put("outputBackWeight", String.valueOf(getWeight()));
+
+        Platform.runLater(() -> {
+            knapsackTabController.redrawBackInfo(info);
+        });
+
         return bestset;
+    }
+
+    private int getProfit(){
+        int bestProfit = 0;
+        for(int i = 0; i< bestset.length; i++) {
+            if (bestset[i]) {
+                bestProfit += p[i];
+            }
+        }
+        return bestProfit;
+    }
+
+    private int getWeight(){
+        int bestWeight = 0;
+        for(int i = 0; i< bestset.length; i++) {
+            if (bestset[i]) {
+                bestWeight += w[i];
+            }
+        }
+        return bestWeight;
     }
 
     void knapsack(int i, int profit, int weight){

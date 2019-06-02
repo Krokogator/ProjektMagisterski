@@ -22,12 +22,12 @@ class CSVReaderTest {
     @Test
     void loadCSV() {
 
-        try {
-            CSVParser parser = csvReader.loadCSV("C:\\Users\\micha\\Downloads\\simplemaps_worldcities_basicv1.4\\newworld.csv");
-            parser.getRecords().forEach(x -> x.forEach(System.out::println));
-        } catch (IOException e) {
-            System.out.println("File not found");
-        }
+//        try {
+//            //CSVParser parser = csvReader.loadCSV("C:\\Users\\micha\\Downloads\\simplemaps_worldcities_basicv1.4\\newworld.csv");
+//            //parser.getRecords().forEach(x -> x.forEach(System.out::println));
+//        } catch (IOException e) {
+//            System.out.println("File not found");
+//        }
 
 
     }
