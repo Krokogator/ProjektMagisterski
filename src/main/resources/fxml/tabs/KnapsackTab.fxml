@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.TextField?>
 <HBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mvp.java.controllers.KnapsackTabController">
     <children>
         <VBox>
@@ -22,12 +23,17 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
                         <Label text="Input file:" />
-                        <Label text="Items number:" GridPane.rowIndex="1"/>
-                        <Label text="Items size:" GridPane.rowIndex="2"/>
+                        <Label text="Items number:" GridPane.rowIndex="1" />
+                        <Label text="Items weight:" GridPane.rowIndex="2" />
+                        <Label text="Max weight:" GridPane.rowIndex="3"/>
                         <Button mnemonicParsing="false" onMouseClicked="#chooseFile" prefWidth="125.0" text="Choose file" GridPane.columnIndex="1" />
+                        <Label fx:id="itemsNumber" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="itemsWeight" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField text="0" fx:id="inputMaxWeight" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                     </children>
                <VBox.margin>
                   <Insets />
@@ -37,6 +43,76 @@
                </padding>
                 </GridPane>
             </children>
+        </VBox>
+        <VBox>
+            <children>
+                <Label text="Backtracking algorithm" />
+                <Button fx:id="runBacktrackButton" text="Run" onMouseClicked="#runBacktracking" />
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+                <children>
+                    <Label text="Profit:"/>
+                    <Label text="Weight:" GridPane.rowIndex="1"/>
+
+                    <Label text="0" fx:id="outputBackProfit" GridPane.columnIndex="1"/>
+                    <Label text="0" fx:id="outputBackWeight" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                </children>
+            </GridPane>
+            </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+        </VBox>
+        <VBox>
+            <children>
+                <Label text="Genetic algorithm" />
+                <Button fx:id="runGeneticButton" text="Run" onMouseClicked="#runGenetic" />
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+                <children>
+                    <Label text="Population size:" />
+                    <Label text="Mutation rate:" GridPane.rowIndex="1" />
+                    <Label text="Generations:" GridPane.rowIndex="2" />
+                    <TextField fx:id="inputPopulationSize" promptText="size" text="100" GridPane.columnIndex="1" />
+                    <TextField fx:id="inputMutationRate" promptText="rate" text="0.05" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField fx:id="inputMaxGeneration" promptText="generations" text="1000" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+
+
+                    <Label text="Profit:" GridPane.rowIndex="3"/>
+                    <Label text="Weight:" GridPane.rowIndex="4"/>
+                    <Label text="Generation:" GridPane.rowIndex="5"/>
+
+
+                    <Label text="0" fx:id="outGeneticProfit" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    <Label text="0" fx:id="outGeneticWeight" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                    <Label text="0" fx:id="outGeneticGeneration" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                </children>
+            </GridPane>
+            </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
         </VBox>
     </children>
 </HBox>

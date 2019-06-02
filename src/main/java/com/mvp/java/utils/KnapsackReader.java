@@ -1,6 +1,7 @@
 package com.mvp.java.utils;
 
 import com.mvp.java.model.knapsack.Knapsack;
+import org.apache.sis.io.IO;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
@@ -10,6 +11,14 @@ public class KnapsackReader {
     public static Knapsack load(String resourcePath) throws IOException {
         File file = ResourceUtils.getFile("classpath:" + resourcePath);
 
+        return loadFile(file);
+    }
+
+    public static Knapsack load(File file) throws IOException {
+        return loadFile(file);
+    }
+
+    private static Knapsack loadFile(File file) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
         String info = bufferedReader.readLine();
