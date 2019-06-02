@@ -55,6 +55,19 @@ public class SalesmanTabController {
     @FXML private Label outputCurrent;
     @FXML private Label outputBest;
 
+    // Genetic
+    // Inputs
+
+    @FXML private TextField inputPopulationSize;
+    @FXML private TextField inputCrossoverRate;
+    @FXML private TextField inputMutationRate;
+    @FXML private TextField inputMaxGeneration;
+
+    // Outputs
+
+    @FXML private Label outputCurrentGeneration;
+    @FXML private Label outputGeneticBest;
+
 
     private Stage stage;
     private GraphicsContext gc;
@@ -285,7 +298,12 @@ public class SalesmanTabController {
     }
 
     public void genetic(MouseEvent mouseEvent) {
-        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(250, 4000, 0.05, 0.008, this);
+        int population = Integer.valueOf(Optional.of(inputPopulationSize.getText()).orElse("100"));
+        int epochs = Integer.valueOf(inputMaxGeneration.getText());
+        double crossoverRate = Double.valueOf(Optional.of(inputCrossoverRate.getText()).orElse("0.5"));
+        double mutationRate = Double.valueOf(Optional.of(inputMutationRate.getText()).orElse("0.5"));
+
+        GeneticSalesmanStrategy geneticSalesmanStrategy = new GeneticSalesmanStrategy(population, epochs, crossoverRate, mutationRate, this);
 
         Thread t1 = new Thread(new Runnable() {
             @Override
@@ -348,6 +366,12 @@ public class SalesmanTabController {
         outputTemp.setText(temp);
         outputCurrent.setText(current);
         outputBest.setText(best);
+
+        String generation = infoMap.getOrDefault("outputGeneration", "0");
+        String geneticBest = infoMap.getOrDefault("outputGeneticBest", "0");
+
+        outputCurrentGeneration.setText(generation);
+        outputGeneticBest.setText(geneticBest);
 
     }
 }

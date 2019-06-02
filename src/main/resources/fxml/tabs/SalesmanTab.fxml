@@ -18,11 +18,31 @@
     <children>
         <VBox spacing="10">
             <children>
-                <VBox spacing="10">
-                    <Button mnemonicParsing="false" onMouseClicked="#chooseFile" text="Input" GridPane.rowIndex="1" />
-                    <ColorPicker fx:id="cityColorPicker" onAction="#setColors" />
-                    <ColorPicker fx:id="roadColorPicker" onAction="#setColors" />
-                </VBox>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                       <Button mnemonicParsing="false" onMouseClicked="#chooseFile" prefWidth="125.0" text="Choose file" GridPane.columnIndex="1" />
+                  <Label text="Input file:" />
+                  <Label text="City color:" GridPane.rowIndex="1" />
+                  <Label text="Road color:" GridPane.rowIndex="2" />
+                       <ColorPicker fx:id="cityColorPicker" onAction="#setColors" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                       <ColorPicker fx:id="roadColorPicker" onAction="#setColors" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
 
 
                 <TabPane minWidth="250.0" prefHeight="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
@@ -32,53 +52,93 @@
                                 <children>
                                     <Button mnemonicParsing="false" onMouseClicked="#simulatedAnnealing" text="Run" GridPane.rowIndex="1" />
                            <GridPane>
-                             <columnConstraints>
-                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                             </columnConstraints>
-                             <rowConstraints>
-                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                             </rowConstraints>
-                              <children>
-                                 <Label text="Temperature:" GridPane.rowIndex="3" />
-                                 <Label fx:id="outputTemp" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                    <GridPane.margin>
-                                       <Insets left="10.0" />
-                                    </GridPane.margin></Label>
-                                 <Label text="Current length:" GridPane.rowIndex="4" />
-                                 <Label fx:id="outputCurrent" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                    <GridPane.margin>
-                                       <Insets left="10.0" />
-                                    </GridPane.margin></Label>
-                                 <Label text="Best length:" GridPane.rowIndex="5" />
-                                 <Label fx:id="outputBest"  text="0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                    <GridPane.margin>
-                                       <Insets left="10.0" />
-                                    </GridPane.margin></Label>
-                                 <Label text="Temperature:" />
-                                 <Label text="Alpha:" GridPane.rowIndex="2" />
-                                 <Label text="Epsilon:" GridPane.rowIndex="1" />
-                                 <TextField fx:id="inputTemp" promptText="Initial temperature" GridPane.columnIndex="1" />
-                                 <TextField fx:id="inputEpsilon" promptText="Final temperature" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                 <TextField fx:id="inputAlpha" promptText="Cooling rate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              </children>
-                           </GridPane>
-                                    
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Temperature:" GridPane.rowIndex="3" />
+                                        <Label fx:id="outputTemp" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                            <GridPane.margin>
+                                                <Insets left="10.0" />
+                                            </GridPane.margin></Label>
+                                        <Label text="Current length:" GridPane.rowIndex="4" />
+                                        <Label fx:id="outputCurrent" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                            <GridPane.margin>
+                                                <Insets left="10.0" />
+                                            </GridPane.margin></Label>
+                                        <Label text="Best length:" GridPane.rowIndex="5" />
+                                        <Label fx:id="outputBest" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                            <GridPane.margin>
+                                                <Insets left="10.0" />
+                                            </GridPane.margin></Label>
+                                        <Label text="Temperature:" />
+                                        <Label text="Alpha:" GridPane.rowIndex="2" />
+                                        <Label text="Epsilon:" GridPane.rowIndex="1" />
+                                        <TextField fx:id="inputTemp" promptText="Initial temperature" text="1000" GridPane.columnIndex="1" />
+                                        <TextField fx:id="inputEpsilon" promptText="Final temperature" text="0.01" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <TextField fx:id="inputAlpha" promptText="Cooling rate" text="0.99999" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    </children>
+                                </GridPane>
+
                                 </children>
                                 <padding>
-                                    <Insets left="10.0" top="10.0" />
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                 </padding>
                             </VBox>
                         </Tab>
                         <Tab text="Genetic">
-                            <content>
-                                <Button mnemonicParsing="false" onMouseClicked="#genetic" text="Genetic" GridPane.rowIndex="1" />
-                            </content>
+                            <VBox spacing="10">
+                                <children>
+                                    <Button mnemonicParsing="false" onMouseClicked="#genetic" text="Run" GridPane.rowIndex="1" />
+                                    <GridPane>
+                                        <columnConstraints>
+                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        </columnConstraints>
+                                        <rowConstraints>
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        </rowConstraints>
+                                        <children>
+                                            <Label text="Generation:" GridPane.rowIndex="4" />
+                                            <Label fx:id="outputCurrentGeneration" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                <GridPane.margin>
+                                                    <Insets left="10.0" />
+                                                </GridPane.margin></Label>
+                                            <Label text="Best length:" GridPane.rowIndex="5" />
+                                            <Label fx:id="outputGeneticBest" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                <GridPane.margin>
+                                                    <Insets left="10.0" />
+                                                </GridPane.margin></Label>
+
+                                            <Label text="Population size:" />
+                                            <Label text="Crossover rate:" GridPane.rowIndex="1" />
+                                            <Label text="Mutation rate:" GridPane.rowIndex="2" />
+                                            <Label text="Generations:" GridPane.rowIndex="3" />
+                                            <TextField fx:id="inputPopulationSize" promptText="size" text="100" GridPane.columnIndex="1" />
+                                            <TextField fx:id="inputCrossoverRate" promptText="rate" text="0.2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                            <TextField fx:id="inputMutationRate" promptText="rate" text="0.05" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                            <TextField fx:id="inputMaxGeneration" promptText="generations" text="1000" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                        </children>
+                                    </GridPane>
+                                </children>
+                        <padding>
+                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        </padding>
+                            </VBox>
                         </Tab>
                     </tabs>
                 </TabPane>

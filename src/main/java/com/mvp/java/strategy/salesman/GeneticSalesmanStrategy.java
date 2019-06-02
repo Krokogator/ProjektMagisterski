@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.util.Pair;
 
 import java.security.SecureRandom;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -69,10 +70,20 @@ public class GeneticSalesmanStrategy implements ISalesmanStrategy {
             Platform.runLater(new Runnable() {
                 @Override public void run() {
                     salesmanTabController.redrawRoute(best);
+                    salesmanTabController.redrawInfo(getInfoMap());
 //                    salesmanTabController.draw(toDraw);
                 }
             });
         }
+    }
+
+    private Map<String, String> getInfoMap() {
+        Map<String, String> info = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.#######");
+        info.put("outputGeneration", String.valueOf(currentEpoch));
+        info.put("outputGeneticBest", String.valueOf(df.format(generation.get(0).getLength())));
+
+        return info;
     }
 
     private void updateStopCondition() {

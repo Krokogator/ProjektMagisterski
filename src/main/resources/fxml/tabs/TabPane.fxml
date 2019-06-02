@@ -10,11 +10,12 @@
     <children>
         <TabPane prefHeight="368.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
-                <Tab text="Travelling salesman" >
+                <Tab text="Travelling salesman problem" >
                     <fx:include fx:id="GraphTab" source="SalesmanTab.fxml" />
                 </Tab>
-
-                <fx:include fx:id="KnapsackTab" source="KnapsackTab.fxml" />
+                <Tab text="Knapsack problem">
+                    <fx:include fx:id="KnapsackTab" source="KnapsackTab.fxml" />
+                </Tab>
             </tabs>
         </TabPane>
     </children>
