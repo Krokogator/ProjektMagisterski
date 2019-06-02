@@ -1,5 +1,6 @@
 package com.mvp.java.controllers;
 
+import com.mvp.java.elements.ResizableCanvas;
 import com.mvp.java.model.salesman.City;
 import com.mvp.java.model.salesman.Route;
 import com.mvp.java.services.SalesmanService;
@@ -17,6 +18,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -38,7 +41,7 @@ public class SalesmanTabController {
     @Autowired
     TwoOptService twoOptService;
 
-    @FXML private Canvas graphCanvas;
+     private ResizableCanvas graphCanvas;
     @FXML public ColorPicker cityColorPicker;
     @FXML public ColorPicker roadColorPicker;
 
@@ -84,10 +87,24 @@ public class SalesmanTabController {
     private double verticalMargin = 10;
     private Color backgroundColor = Color.gray(0.12);
 
+    @FXML private StackPane anchor;
+
     private FileChooser fileChooser;
 
     public void initialize(){
-
+        ResizableCanvas resizableCanvas = new ResizableCanvas();
+        resizableCanvas.widthProperty().bind(anchor.widthProperty());
+        resizableCanvas.heightProperty().bind(anchor.heightProperty());
+        graphCanvas = resizableCanvas;
+//        resizableCanvas.setWidth(500);
+//        resizableCanvas.setHeight(500);
+        anchor.getChildren().add(resizableCanvas);
+//
+//        resizableCanvas.setHeight(1000);
+//        resizableCanvas.widthProperty().bind(anchor.widthProperty());
+//        resizableCanvas.heightProperty().bind(anchor.heightProperty());
+//        graphCanvas.setHeight(((AnchorPane) graphCanvas.getParent()).getHeight());
+//        graphCanvas.setWidth(((AnchorPane) graphCanvas.getParent()).getWidth());
         this.fileChooser = new FileChooser();
         gc = graphCanvas.getGraphicsContext2D();
         redrawTask = new CanvasRedrawTask(this);
