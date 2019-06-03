@@ -1,12 +1,29 @@
 package com.mvp.java.elements;
 
+import com.mvp.java.controllers.SalesmanTabController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+
+import java.io.IOException;
+
 public class ResizableCanvas extends Canvas {
 
-    public ResizableCanvas() {
-        widthProperty().addListener(evt -> draw());
-        heightProperty().addListener(evt -> draw());
+
+    public ResizableCanvas(SalesmanTabController salesmanTabController) {
+        widthProperty().addListener(evt -> {
+            try {
+                salesmanTabController.redraw();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        heightProperty().addListener(evt -> {
+            try {
+                salesmanTabController.redraw();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void draw() {
@@ -25,13 +42,4 @@ public class ResizableCanvas extends Canvas {
         return true;
     }
 
-    @Override
-    public double prefWidth(double height) {
-        return getWidth();
-    }
-
-    @Override
-    public double prefHeight(double width) {
-        return getHeight();
-    }
 }

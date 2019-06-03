@@ -92,7 +92,7 @@ public class SalesmanTabController {
     private FileChooser fileChooser;
 
     public void initialize(){
-        ResizableCanvas resizableCanvas = new ResizableCanvas();
+        ResizableCanvas resizableCanvas = new ResizableCanvas(this);
         resizableCanvas.widthProperty().bind(anchor.widthProperty());
         resizableCanvas.heightProperty().bind(anchor.heightProperty());
         graphCanvas = resizableCanvas;
@@ -239,7 +239,7 @@ public class SalesmanTabController {
 
     }
 
-    private void redraw() throws IOException {
+    public void redraw() throws IOException {
         loadPoints();
         clear();
         draw();
@@ -333,6 +333,12 @@ public class SalesmanTabController {
 
     public void draw(Route route) {
         this.route = route;
+        loadPoints();
+        clear();
+        draw();
+    }
+
+    public void redrawNew() {
         loadPoints();
         clear();
         draw();
