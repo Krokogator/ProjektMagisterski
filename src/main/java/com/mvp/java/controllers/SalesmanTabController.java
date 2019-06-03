@@ -99,8 +99,16 @@ public class SalesmanTabController {
 //        resizableCanvas.setWidth(500);
 //        resizableCanvas.setHeight(500);
         anchor.getChildren().add(resizableCanvas);
-//
-//        resizableCanvas.setHeight(1000);
+
+        try {
+            salesmanService.init();
+            this.route = salesmanService.getRoute();
+            Collections.shuffle(this.route.getCities());
+            loadPoints();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //        resizableCanvas.setHeight(1000);
 //        resizableCanvas.widthProperty().bind(anchor.widthProperty());
 //        resizableCanvas.heightProperty().bind(anchor.heightProperty());
 //        graphCanvas.setHeight(((AnchorPane) graphCanvas.getParent()).getHeight());
@@ -112,14 +120,7 @@ public class SalesmanTabController {
         this.cityColorPicker.setValue(cityColor);
         this.roadColorPicker.setValue(roadColor);
         clear();
-        try {
-            salesmanService.init();
-            this.route = salesmanService.getRoute();
-            Collections.shuffle(this.route.getCities());
-            loadPoints();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         draw();
     }
 
@@ -147,26 +148,18 @@ public class SalesmanTabController {
                 .map(city -> new Point2D(city.getX(), city.getY()))
                 .collect(Collectors.toList());
 
+        double maxX = points.stream().mapToDouble(point -> point.getX()).max().getAsDouble();
+        double maxY = points.stream().mapToDouble(point -> point.getY()).max().getAsDouble();
+
+        double padding = 10;
+
+        double coef = Math.min((graphCanvas.getWidth() - (2*padding)) / maxX, (graphCanvas.getHeight() - (2* padding)) / maxY);
+
+
+
         this.points = points.stream()
-                .map(point -> {
-                    return new Point2D(point.getX()*1/6, graphCanvas.getHeight() - point.getY()*1/8);
-                })
+                .map(point -> new Point2D(point.getX()*coef + padding, graphCanvas.getHeight() - (point.getY()*coef + padding)))
                 .collect(Collectors.toList());
-    }
-
-    private void generatePoints(){
-        points = new ArrayList<>();
-
-        Random r = new Random();
-
-        for (int i = 0; i < cityCount; i++){
-            points.add(
-                    new Point2D(
-                            r.nextInt((int) (graphCanvas.getWidth() - horizontalMargin * 2)) + horizontalMargin,
-                            r.nextInt((int) (graphCanvas.getHeight() - verticalMargin * 2)) + verticalMargin
-                    )
-            );
-        }
     }
 
     private void orderize(){
@@ -181,7 +174,6 @@ public class SalesmanTabController {
             next = (points.stream().min(getNearest(ordered.get(ordered.size()-1))).get());
             points.remove(next);
             ordered.add(next);
-            //draw();
         }
 
         points = ordered;
@@ -236,7 +228,6 @@ public class SalesmanTabController {
         }
 
         drawCity(firstPoint.getX(), firstPoint.getY());
-
     }
 
     public void redraw() throws IOException {
@@ -261,13 +252,6 @@ public class SalesmanTabController {
         gc.setFill(backgroundColor);
         gc.fillRect(0,0,graphCanvas.getWidth(), graphCanvas.getHeight());
     }
-
-    public void reinitialize() {
-        clear();
-        generatePoints();
-        draw();
-    }
-
 
     public void orderClosest() {
         clear();
