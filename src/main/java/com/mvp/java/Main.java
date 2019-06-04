@@ -36,7 +36,7 @@ public class Main extends Application {
         stage.setMinWidth(920);
         stage.setHeight(480);
         stage.setWidth(920);
-
+        stage.setTitle("Selected applications of evolutionary algorithms");
         stage.show();
     }
 
